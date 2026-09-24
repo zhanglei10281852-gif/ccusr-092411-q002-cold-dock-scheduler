@@ -4,7 +4,13 @@
     "dock",
     "temperature_zone",
     "vehicle",
-    "reservation"
+    "reservation",
+    "precool_room",
+    "storage_room",
+    "waitlist_entry",
+    "equipment_outage",
+    "alert",
+    "manual_insert_audit"
   ],
   "states": [
     "requested",
@@ -13,17 +19,75 @@
     "arrived",
     "processing",
     "completed",
-    "cancelled"
+    "cancelled",
+    "rejected"
   ],
   "event_types": [
     "reservation.requested",
     "reservation.scheduled",
     "vehicle.arrived",
     "equipment.disabled",
-    "reservation.completed"
+    "reservation.completed",
+    "reservation.waitlisted",
+    "reservation.rejected",
+    "reservation.rescheduled",
+    "reservation.postponed",
+    "reservation.amended",
+    "reservation.manual_inserted",
+    "waitlist.accepted",
+    "operation.started",
+    "reservation.cancelled",
+    "equipment.enabled",
+    "goods.released",
+    "alert.raised",
+    "alert.resolved"
   ],
   "time_policy": "ISO 8601 with timezone",
-  "identifier_policy": "业务标识在同一类型内唯一",
-  "version_policy": "发布后的规则以新版本追加"
+  "identifier_policy": "业务标识在同一类型内唯一；事件标识由事件类型、聚合、发生分钟、序号与载荷确定性派生",
+  "version_policy": "发布后的规则以新版本追加",
+  "capacity_policy": "月台按门位分钟级互斥；预冷间按托盘分钟级容量；低温库按温区库位自入库持续占用至出库",
+  "freeze_policy": "已进场车辆保持原位，扰动只重新编排尚未开始的作业",
+  "waitlist_policy": "候补按申报顺序编号，接纳严格 FIFO，序号与告警在重启后继续有效",
+  "overnight_policy": "跨午夜窗口按市场时区的当地自然日计算",
+  "versions": [
+    {
+      "version": 1,
+      "event_types": [
+        "reservation.requested",
+        "reservation.scheduled",
+        "vehicle.arrived",
+        "equipment.disabled",
+        "reservation.completed"
+      ]
+    },
+    {
+      "version": 2,
+      "adds": {
+        "states": ["rejected"],
+        "event_types": [
+          "reservation.waitlisted",
+          "reservation.rejected",
+          "reservation.rescheduled",
+          "reservation.postponed",
+          "reservation.amended",
+          "reservation.manual_inserted",
+          "waitlist.accepted",
+          "operation.started",
+          "reservation.cancelled",
+          "equipment.enabled",
+          "goods.released",
+          "alert.raised",
+          "alert.resolved"
+        ],
+        "entities": [
+          "precool_room",
+          "storage_room",
+          "waitlist_entry",
+          "equipment_outage",
+          "alert",
+          "manual_insert_audit"
+        ]
+      }
+    }
+  ]
 }
-

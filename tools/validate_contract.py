@@ -22,7 +22,20 @@ def validate() -> tuple[int, int]:
         raise ValueError("领域合同缺少字段：" + "、".join(missing))
     if contract["time_policy"] != "ISO 8601 with timezone":
         raise ValueError("time_policy 必须明确包含时区")
-    allowed = set(contract["event_types"])
+
+    # 合同中的事件类型必须与代码内注册的事件集合完全一致
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from coldchain.events import ALL_EVENT_TYPES
+    contract_types = set(contract["event_types"])
+    only_contract = contract_types - ALL_EVENT_TYPES
+    only_code = ALL_EVENT_TYPES - contract_types
+    if only_contract:
+        raise ValueError("合同存在代码未实现的事件类型：" + "、".join(sorted(only_contract)))
+    if only_code:
+        raise ValueError("代码存在合同未声明的事件类型：" + "、".join(sorted(only_code)))
+
+    allowed = contract_types
     connection = sqlite3.connect(":memory:")
     connection.execute(
         "create table event_log(event_id text primary key, event_type text not null, "
