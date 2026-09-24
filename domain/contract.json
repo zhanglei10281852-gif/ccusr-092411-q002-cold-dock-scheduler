@@ -2,12 +2,18 @@
   "project": "冷库月台预约协调",
   "entities": [
     "dock",
+    "precool_room",
+    "storage_location",
     "temperature_zone",
     "vehicle",
-    "reservation"
+    "reservation",
+    "waitlist_entry",
+    "manual_override",
+    "alarm"
   ],
   "states": [
     "requested",
+    "rejected",
     "waitlisted",
     "scheduled",
     "arrived",
@@ -17,13 +23,43 @@
   ],
   "event_types": [
     "reservation.requested",
+    "reservation.revised",
+    "reservation.rejected",
     "reservation.scheduled",
+    "reservation.waitlisted",
+    "reservation.promoted",
+    "reservation.overridden",
     "vehicle.arrived",
+    "reservation.processing",
+    "reservation.completed",
+    "reservation.cancelled",
     "equipment.disabled",
-    "reservation.completed"
+    "equipment.enabled",
+    "alarm.raised",
+    "alarm.cleared"
+  ],
+  "resources": [
+    {"type": "dock", "capacity_unit": "vehicles"},
+    {"type": "precool", "capacity_unit": "pallets"},
+    {"type": "storage", "capacity_unit": "pallets"}
+  ],
+  "conflict_types": [
+    "capacity",
+    "disabled",
+    "exposure",
+    "window",
+    "zone"
   ],
   "time_policy": "ISO 8601 with timezone",
-  "identifier_policy": "业务标识在同一类型内唯一",
+  "scheduling_granularity_minutes": 1,
+  "window_policy": "窗口以市场营业日 00:00 为分钟零点，允许跨午夜，最长 48 小时",
+  "timezone_policy": "所有到场窗口与跨午夜归属按市场时区解释",
+  "identifier_policy": "业务标识在同一类型内唯一；事件 ID 由聚合 ID、聚合内序号与载荷确定性派生",
+  "ordering_policy": "事件按提交顺序(rowid)折叠，而非发生时间；事后补录的命令不得颠倒因果",
+  "concurrency_policy": "每聚合单调序号 + 提交事务内乐观版本校验，冲突整体回滚",
+  "immutability_policy": "已开工(processing/completed)车辆作业锁定，重排只移动尚未开始的预约",
+  "override_policy": "人工插单必须记录批准人，并记录被延后的批次",
+  "waitlist_policy": "候补序号按营业日单调递增，保留原序号，重启后继续有效",
+  "determinism_policy": "同一事件流重放任意次产生相同排程，不依赖墙钟或随机数",
   "version_policy": "发布后的规则以新版本追加"
 }
-

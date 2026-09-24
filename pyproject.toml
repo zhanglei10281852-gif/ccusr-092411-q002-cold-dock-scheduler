@@ -1,7 +1,7 @@
 [project]
 name = "ccusr-cold-dock-scheduler"
 version = "0.1.0"
-description = "月台、温区、车辆与预约窗口的领域资料"
+description = "冷库月台、预冷间与库位的分钟级预约协调（事件溯源、确定性排程、乐观并发）"
 requires-python = ">=3.11"
 dependencies = []
 
