@@ -1,0 +1,10 @@
+[project]
+name = "ccusr-cold-dock-scheduler"
+version = "0.1.0"
+description = "月台、温区、车辆与预约窗口的领域资料"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.unittest]
+start-directory = "tests"
+

@@ -1,0 +1,29 @@
+{
+  "project": "冷库月台预约协调",
+  "entities": [
+    "dock",
+    "temperature_zone",
+    "vehicle",
+    "reservation"
+  ],
+  "states": [
+    "requested",
+    "waitlisted",
+    "scheduled",
+    "arrived",
+    "processing",
+    "completed",
+    "cancelled"
+  ],
+  "event_types": [
+    "reservation.requested",
+    "reservation.scheduled",
+    "vehicle.arrived",
+    "equipment.disabled",
+    "reservation.completed"
+  ],
+  "time_policy": "ISO 8601 with timezone",
+  "identifier_policy": "业务标识在同一类型内唯一",
+  "version_policy": "发布后的规则以新版本追加"
+}
+
